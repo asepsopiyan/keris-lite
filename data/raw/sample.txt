@@ -1,0 +1,49 @@
+KERIS: Sistem RAG Lokal untuk Dokumen Indonesia
+
+KERIS adalah sistem RAG (Retrieve-and-Generate) yang dirancang untuk berjalan secara lokal terlebih dahulu, dengan fokus pada pengalaman pengguna yang baik sebelum di-refactor untuk Huawei Cloud.
+
+Fitur Utama:
+- Pencarian dokumen berbasis AI
+- Embedding lokal menggunakan Ollama
+- Penyimpanan vektor menggunakan Qdrant
+- Interface web sederhana dan responsif
+
+Arsitektur Sistem:
+1. Frontend: Next.js dengan TypeScript
+2. Backend: API routes untuk chat dan ingest
+3. Vector Store: Qdrant via Docker
+4. LLM: Ollama (lokal) atau Gemini (API)
+
+Cara Kerja:
+1. Dokumen di-chunk menjadi potongan kecil
+2. Setiap chunk di-embed menjadi vektor
+3. Vektor disimpan di database Qdrant
+4. Saat user bertanya, pertanyaan di-embed
+5. Sistem mencari chunk yang relevan
+6. AI menjawab berdasarkan konteks yang ditemukan
+
+Keunggulan:
+- Berjalan 100% lokal tanpa internet
+- Mudah di-deploy ke cloud nanti
+- Support untuk dokumen PDF dan TXT
+- Interface yang user-friendly
+
+Penggunaan:
+1. Taruh dokumen di folder data/raw
+2. Jalankan script ingest untuk indexing
+3. Buka aplikasi web dan mulai bertanya
+4. AI akan menjawab berdasarkan dokumen yang tersedia
+
+Teknologi yang Digunakan:
+- Next.js 15 dengan App Router
+- TypeScript untuk type safety
+- Tailwind CSS untuk styling
+- Qdrant untuk vector database
+- Ollama untuk LLM lokal
+- PDF-parse untuk ekstraksi teks
+
+Roadmap ke Huawei Cloud:
+- Storage: OBS bucket untuk dokumen
+- Compute: CCE untuk container
+- AI: ModelArts untuk LLM
+- Security: WAF dan CLB
