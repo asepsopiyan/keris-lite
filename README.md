@@ -1,186 +1,165 @@
-# KERIS-lite (Local-First)
+# 🚀 KERIS Lite - Next.js RAG MVP
 
-A simple RAG (retrieve-and-generate) system that runs locally first, designed for easy migration to Huawei Cloud later.
+[![Next.js](https://img.shields.io/badge/Next.js-15.0.0-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-## Architecture (Local)
+> **KERIS** (Knowledge Extraction and Retrieval Information System) - A modern RAG (Retrieval Augmented Generation) application built with Next.js 15, featuring vector search capabilities and a beautiful UI.
 
--   **UI + API**: Next.js (App Router, TypeScript)
--   **Document Storage**: Local folder `./data/raw`
--   **Chunking + Embedding**: Ollama (default, on-device) or Gemini (optional, API)
--   **Vector Store**: Qdrant via Docker (1 container) — easy to swap to Milvus later
+## ✨ Features
 
-## Prerequisites
+- 🔍 **RAG Capabilities** - Advanced retrieval augmented generation with vector search
+- 💬 **Real-time Chat** - Streaming chat interface with AI responses
+- 🎨 **Modern UI** - Beautiful, responsive design with Tailwind CSS
+- 🚀 **Next.js 15** - Latest Next.js with App Router and TypeScript
+- 🔐 **Vector Search** - Efficient document search using vector embeddings
+- 🐳 **Docker Ready** - Containerized deployment with docker-compose
+- 📱 **Responsive Design** - Mobile-first approach
+- ⚡ **Fast Performance** - Optimized for speed and user experience
 
--   Node ≥ 20, pnpm
--   Docker Desktop / CLI
-
-## Quick Start (10-15 minutes)
-
-### 1. Setup Project
-
-```bash
-# Install dependencies
-pnpm install
-
-# Copy environment file
-cp env.example .env.local
-# Edit .env.local with your settings
-```
-
-### 2. Start Local Dependencies
-
-#### Qdrant (Vector DB)
-
-```bash
-docker run -d --name qdrant -p 6333:6333 qdrant/qdrant:latest
-```
-
-#### Ollama (Optional, for full local setup)
-
-```bash
-docker run -d --name ollama -p 11434:11434 ollama/ollama:latest
-
-# After container is up, pull models:
-docker exec -it ollama ollama pull qwen2.5:7b-instruct
-docker exec -it ollama ollama pull nomic-embed-text
-```
-
-### 3. Add Documents
-
-Place your PDF/TXT files in the `data/raw/` folder.
-
-### 4. Index Documents
-
-```bash
-pnpm tsx scripts/ingest.ts
-```
-
-### 5. Run Application
-
-```bash
-pnpm dev
-```
-
-Open http://localhost:3000 and start asking questions!
-
-## Configuration
-
-### Environment Variables
-
-Copy `env.example` to `.env.local` and configure:
-
--   `LLM_PROVIDER`: Choose between `ollama` or `gemini`
--   `OLLAMA_*`: Ollama settings (default)
--   `GEMINI_*`: Gemini API settings
--   `QDRANT_*`: Qdrant connection settings
-
-### LLM Providers
-
-#### Ollama (Default)
-
--   Runs locally via Docker
--   Models: qwen2.5:7b-instruct, nomic-embed-text
--   No API key required
-
-#### Gemini
-
--   Requires Google API key
--   Faster response times
--   Internet connection required
-
-## Usage
-
-1. **Add Documents**: Place PDF/TXT files in `data/raw/`
-2. **Index**: Run `pnpm tsx scripts/ingest.ts`
-3. **Query**: Use the web interface to ask questions
-4. **Get Answers**: AI responds with context from your documents
-
-## Project Structure
+## 🏗️ Architecture
 
 ```
 keris-lite/
-├─ data/
-│  └─ raw/                # Put your PDF/TXT files here
-├─ src/
-│  ├─ app/
-│  │  ├─ api/
-│  │  │  └─ chat/route.ts # Chat endpoint
-│  │  └─ page.tsx         # Main UI
-│  └─ lib/
-│     ├─ config.ts        # Configuration
-│     ├─ llm.ts           # LLM adapters
-│     └─ vector.ts        # Qdrant helpers
-├─ scripts/
-│  └─ ingest.ts           # Document indexing CLI
-└─ env.example            # Environment template
+├── src/
+│   ├── app/           # Next.js App Router
+│   │   ├── api/       # API endpoints
+│   │   └── page.tsx   # Main application
+│   └── lib/           # Core libraries
+│       ├── config.ts  # Configuration
+│       ├── llm.ts     # LLM integration
+│       └── vector.ts  # Vector search
+├── data/              # Sample data
+├── scripts/           # Utility scripts
+└── docker-compose.yml # Docker setup
 ```
 
-## Migration Roadmap → Huawei Cloud
+## 🚀 Quick Start
 
-### Phase 1: Local Development ✅
+### Prerequisites
 
--   [x] Basic RAG functionality
--   [x] Local document storage
--   [x] Ollama + Qdrant integration
+- Node.js 18+ 
+- pnpm (recommended) or npm
+- Docker (optional)
 
-### Phase 2: Cloud Migration (Future)
+### Installation
 
--   **Storage**: `./data/raw` → OBS bucket
--   **Vector DB**: Qdrant Docker → CCE (or Milvus on CCE)
--   **LLM**: Ollama → ModelArts Studio / Pangu
--   **Deployment**: Next.js dev → CCE + CLB/WAF
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/asepsopiyan/keris-lite.git
+   cd keris-lite
+   ```
 
-### Phase 3: Production Features
+2. **Install dependencies**
+   ```bash
+   pnpm install
+   # or
+   npm install
+   ```
 
--   Document upload via UI
--   Per-chunk embeddings (currently demo)
--   Reranking (BM25 + cosine)
--   Authentication & authorization
--   Monitoring & logging
+3. **Setup environment**
+   ```bash
+   cp env.example .env.local
+   # Edit .env.local with your configuration
+   ```
 
-## Development
+4. **Run the development server**
+   ```bash
+   pnpm dev
+   # or
+   npm run dev
+   ```
 
-### Adding Features
+5. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
 
-1. **Document Upload**: Create `src/app/api/ingest/route.ts`
-2. **Better Embeddings**: Modify `scripts/ingest.ts` for per-chunk vectors
-3. **Reranking**: Add BM25 scoring in `src/lib/vector.ts`
-
-### Testing
-
--   Test with documents ≥ 5 pages
--   Verify answer accuracy and context usage
--   Check response times (< 2s for Gemini, variable for Ollama)
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Qdrant Connection Error**: Ensure Docker container is running
-2. **Ollama Model Not Found**: Pull required models via Docker exec
-3. **Embedding Errors**: Check API keys and model availability
-
-### Debug Mode
-
-Enable detailed logging by setting environment variables:
+### Docker Setup
 
 ```bash
-DEBUG=1
-NODE_ENV=development
+# Build and run with Docker
+docker-compose up --build
+
+# Or run in background
+docker-compose up -d
 ```
 
-## License
+## 📚 Documentation
 
-MIT License - see LICENSE file for details.
+- [**PROJECT_SUMMARY.md**](./PROJECT_SUMMARY.md) - Comprehensive project overview
+- [**QUICKSTART.md**](./QUICKSTART.md) - Detailed setup guide
+- [**UI_FEATURES.md**](./UI_FEATURES.md) - UI components and features
+- [**test-setup.md**](./test-setup.md) - Testing configuration
 
-## Contributing
+## 🛠️ Development
+
+### Available Scripts
+
+```bash
+pnpm dev          # Start development server
+pnpm build        # Build for production
+pnpm start        # Start production server
+pnpm lint         # Run ESLint
+pnpm type-check   # Run TypeScript check
+```
+
+### Project Structure
+
+- **Frontend**: Next.js 15 with TypeScript
+- **Styling**: Tailwind CSS with custom components
+- **Backend**: API routes with streaming responses
+- **Vector DB**: Integration ready for various vector databases
+- **LLM**: Configurable LLM integration
+
+## 🌟 Key Features
+
+### RAG Implementation
+- Document ingestion and processing
+- Vector embeddings generation
+- Semantic search capabilities
+- Context-aware responses
+
+### Modern UI Components
+- Responsive chat interface
+- Real-time streaming
+- Beautiful animations
+- Mobile-optimized design
+
+### Performance Optimizations
+- Next.js 15 optimizations
+- Efficient data loading
+- Optimized bundle size
+- Fast refresh development
+
+## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Next.js team for the amazing framework
+- Tailwind CSS for the utility-first CSS framework
+- OpenAI for LLM capabilities
+- Vector database communities
+
+## 📞 Support
+
+If you have any questions or need help:
+
+- 🐛 [Report a Bug](https://github.com/asepsopiyan/keris-lite/issues)
+- 💡 [Request a Feature](https://github.com/asepsopiyan/keris-lite/issues)
+- 📧 [Contact](mailto:asep.sopiyan1309@gmail.com)
 
 ---
 
-**Note**: This is a development version, not production-ready. Focus on functionality first, then refactor for production use.
+**Made with ❤️ by [asepsopiyan](https://github.com/asepsopiyan)**
+
+*Star this repository if you find it helpful! ⭐*
