@@ -46,16 +46,20 @@ export async function embed(texts: string[]): Promise<number[][]> {
         );
         return embeddings;
     }
-    // ollama embeddings
-    const r = await fetch(`${cfg.ollama.baseURL}/api/embeddings`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            model: cfg.ollama.embedModel,
-            prompt: texts.join('\n\n'),
-        }),
-    });
-    const data = await r.json();
-    // Ollama returns single vector for combined prompt → simple split (demo purpose)
-    return [data.embedding];
+    // ollama embeddings - Enhanced: Generate individual embeddings for each text
+    const embeddings = await Promise.all(
+        texts.map(async (text) => {
+            const r = await fetch(`${cfg.ollama.baseURL}/api/embeddings`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model: cfg.ollama.embedModel,
+                    prompt: text,
+                }),
+            });
+            const data = await r.json();
+            return data.embedding;
+        })
+    );
+    return embeddings;
 }

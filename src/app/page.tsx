@@ -6,7 +6,12 @@ interface Message {
     role: 'user' | 'assistant';
     content: string;
     timestamp: Date;
-    references?: Array<{ file: string; idx: number }>;
+    references?: Array<{
+        file: string;
+        idx: number;
+        score?: number;
+        chunk_size?: number;
+    }>;
 }
 
 export default function Home() {
@@ -33,7 +38,7 @@ export default function Home() {
             if (response.ok) {
                 setIsConnected(true);
             }
-        } catch (error) {
+        } catch {
             console.log('System not ready yet...');
         }
     };
@@ -174,12 +179,14 @@ export default function Home() {
                                 <div className="space-y-2 text-gray-500 dark:text-gray-400 text-sm">
                                     <p>💡 Contoh pertanyaan:</p>
                                     <ul className="space-y-1">
-                                        <li>• "Apa itu KERIS?"</li>
+                                        <li>• &ldquo;Apa itu KERIS?&rdquo;</li>
                                         <li>
-                                            • "Bagaimana cara kerja sistem RAG?"
+                                            • &ldquo;Bagaimana cara kerja sistem
+                                            RAG?&rdquo;
                                         </li>
                                         <li>
-                                            • "Teknologi apa yang digunakan?"
+                                            • &ldquo;Teknologi apa yang
+                                            digunakan?&rdquo;
                                         </li>
                                     </ul>
                                 </div>
@@ -207,19 +214,46 @@ export default function Home() {
                                         {message.references &&
                                             message.references.length > 0 && (
                                                 <div className="mt-3 pt-3 border-gray-200 dark:border-gray-600 border-t">
-                                                    <p className="mb-1 text-gray-500 dark:text-gray-400 text-xs">
-                                                        Referensi:
+                                                    <p className="mb-1 font-medium text-gray-500 dark:text-gray-400 text-xs">
+                                                        📚 Referensi Dokumen:
                                                     </p>
-                                                    <div className="space-y-1">
+                                                    <div className="space-y-2">
                                                         {message.references.map(
                                                             (ref, idx) => (
                                                                 <div
                                                                     key={idx}
-                                                                    className="bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded text-xs"
+                                                                    className="bg-gray-200 dark:bg-gray-600 px-3 py-2 rounded-lg text-xs"
                                                                 >
-                                                                    {ref.file}{' '}
-                                                                    (chunk{' '}
-                                                                    {ref.idx})
+                                                                    <div className="flex justify-between items-start mb-1">
+                                                                        <span className="font-medium text-gray-700 dark:text-gray-300">
+                                                                            📄{' '}
+                                                                            {
+                                                                                ref.file
+                                                                            }
+                                                                        </span>
+                                                                        {ref.score && (
+                                                                            <span className="bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded font-mono text-blue-800 dark:text-blue-200 text-xs">
+                                                                                Score:{' '}
+                                                                                {ref.score.toFixed(
+                                                                                    3
+                                                                                )}
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
+                                                                    <div className="text-gray-600 dark:text-gray-400">
+                                                                        Chunk #
+                                                                        {ref.idx +
+                                                                            1}
+                                                                        {ref.chunk_size && (
+                                                                            <span className="ml-2 text-gray-500">
+                                                                                (
+                                                                                {
+                                                                                    ref.chunk_size
+                                                                                }{' '}
+                                                                                chars)
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
                                                                 </div>
                                                             )
                                                         )}
